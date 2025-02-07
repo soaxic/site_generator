@@ -1,1 +1,1 @@
-# site_generator
+Boot.dev project: Build a static site generator
