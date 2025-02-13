@@ -55,6 +55,65 @@ class TestHTMLNode(unittest.TestCase):
         node = LeafNode(node_tag, node_value, node_props)
         testcase = '<a href="https://www.google.com" target="_blank">Click here to go to Google!</a>'
         self.assertEqual(node.to_html(), testcase)
+        
+    def test_leaf_repr(self):
+        node_tag = "a"
+        node_value = "Click here to go to Google!"
+        node_props = {
+            "href": "https://www.google.com",
+            "target": "_blank",
+        }
+        node = LeafNode(node_tag, node_value, node_props)
+        testcase = f"LeafNode({node.tag}, {node.value}, {node.props})"
+        self.assertEqual(node.__repr__(), testcase)
+
+    #ParentNode Tests
+    def test_parent_node(self):
+        node = ParentNode(
+            "p",
+            [
+                LeafNode("b", "Bold text"),
+                LeafNode(None, "Normal text"),
+                LeafNode("i", "italic text"),
+                LeafNode(None, "Normal text"),
+            ],
+        )
+        testcase = "<p><b>Bold text</b>Normal text<i>italic text</i>Normal text</p>"
+        self.assertEqual(node.to_html(), testcase)
+
+    def test_nested_parents(self):
+        nested_node = ParentNode(
+            "p",
+            [
+                LeafNode("b", "Bold text"),
+                LeafNode(None, "Normal text"),
+                LeafNode("i", "italic text"),
+                LeafNode(None, "Normal text"),
+            ],
+        )
+        node = ParentNode(
+            "div",
+            [
+                LeafNode(None, "Before the nested ParentNode"),
+                nested_node,
+                LeafNode(None, "After the nested ParentNode.")
+            ]
+        )
+        testcase = '<div>Before the nested ParentNode<p><b>Bold text</b>Normal text<i>italic text</i>Normal text</p>After the nested ParentNode.</div>'
+        self.assertEqual(node.to_html(), testcase)
+
+    def test_parent_repr(self):
+        node = ParentNode(
+            "p",
+            [
+                LeafNode("b", "Bold text"),
+                LeafNode(None, "Normal text"),
+                LeafNode("i", "italic text"),
+                LeafNode(None, "Normal text"),
+            ],
+        )
+        testcase = f"ParentNode({node.tag}, {node.children}, {node.props})"
+        self.assertEqual(node.__repr__(), testcase)
 
 if __name__ == "__main__":
     unittest.main()
