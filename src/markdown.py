@@ -45,3 +45,23 @@ def extract_markdown_links(text):
             )
         )
     return tupled_links
+
+def split_nodes_image(old_nodes):
+    new_nodes = []
+    for old_node in old_nodes:
+        working_section = old_node.text
+        if old_node.text_type != TextType.TEXT:
+            new_nodes.append(old_node)
+        else:
+            images = extract_markdown_images(working_section)
+            for image in images:
+                alt_text = image[0]
+                image_link = image[1]
+                split_node = working_section.split(f"![{alt_text}]({image_link})", 1)
+                if split_node[0] != "":
+                    new_nodes.append(TextNode(split_node[0], TextType.TEXT))
+                new_nodes.append(TextNode(alt_text, TextType.IMAGE, image_link))
+                working_section = split_node[1]
+            if working_section != "":
+                    new_nodes.append(TextNode(working_section, TextType.TEXT))
+    return new_nodes
