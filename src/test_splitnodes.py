@@ -44,6 +44,35 @@ class TestSplitNodes(unittest.TestCase):
             split_nodes_image([node])
         )
 
+    def test_split_nodes_link(self):
+        node = TextNode("this has a [link](https://localhost/)", TextType.TEXT)
+        self.assertListEqual(
+            split_nodes_link([node]),
+            [TextNode("this has a ", TextType.TEXT, None), TextNode("link", TextType.LINK, "https://localhost/")]
+        )
+
+    def test_split_nodes_link_no_link(self):
+        node = TextNode("this has no link", TextType.TEXT)
+        self.assertListEqual(
+            [node],
+            split_nodes_link([node])
+        )
+
+    def test_split_nodes_link_start_end(self):
+        node = TextNode("[link1](url.com) This text starts and ends with links [link2](url.net)", TextType.TEXT)
+        self.assertListEqual(
+            split_nodes_link([node]),
+            [TextNode("link1", TextType.LINK, "url.com"), TextNode(" This text starts and ends with links ", TextType.TEXT, None), TextNode("link2", TextType.LINK, "url.net")]
+        )
+
+    def test_split_nodes_link_spaced(self):
+        node = TextNode(" [link1](link1.com) [link2](link2.com) ", TextType.TEXT)
+        self.assertListEqual(
+            [TextNode(" ", TextType.TEXT, None), TextNode("link1", TextType.LINK, "link1.com"), TextNode(" ", TextType.TEXT, None), TextNode("link2", TextType.LINK, "link2.com"), TextNode(" ", TextType.TEXT, None)],
+            split_nodes_link([node])
+        )
+        
+
 class TestExtractMarkdown(unittest.TestCase):
     def test_extract_image(self):
         text = "This is text with a ![rick roll](https://i.imgur.com/aKaOqIh.gif) and ![obi wan](https://i.imgur.com/fJRm4Vk.jpeg) and a broken link (https://i.imgur.com/fJRm4Vk.jpeg)"
