@@ -102,3 +102,13 @@ def markdown_to_blocks(markdown):
             if block != "":
                 output_blocks.append(block.strip())
     return output_blocks
+
+def extract_title(markdown):
+    blocks = markdown_to_blocks(markdown)
+    title = None
+    for block in blocks:
+        if block.startswith("# "):
+            title = block[2:]
+    if title == None:
+        raise Exception("title is missing!")
+    return title

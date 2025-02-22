@@ -1,7 +1,9 @@
 import os, shutil
+from generate_page import *
 
 def main():
     generate_public_folder()
+    generate_page("./content/index.md", "./template.html", "./public/index.html")
 
 def generate_public_folder():
     if os.path.exists("./public"):

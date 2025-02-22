@@ -133,3 +133,10 @@ This is a paragraph of text. It has some **bold** and *italic* words inside of i
             ['# This is a heading', 'This is a paragraph of text. It has some **bold** and *italic* words inside of it.', '* This is the first list item in a list block\n* This is a list item\n* This is another list item'],
             markdown_to_blocks(text)
         )
+
+    def test_extract_title(self):
+        markdown = """# This is the title
+
+### This is not the title"""
+        title = extract_title(markdown)
+        self.assertEqual(title, "This is the title")

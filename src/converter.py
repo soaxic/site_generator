@@ -34,7 +34,8 @@ def block_to_htmlnodes(block, blocktype):
             children = []
             for i in range(len(lines)):
                 lines[i] = lines[i][1:]
-                children.extend(block_to_htmlnodes(lines[i], BlockType.PARAGRAPH))
+                children.extend(get_children(lines[i][1:]))
+                #children.extend(block_to_htmlnodes(lines[i], BlockType.PARAGRAPH))
             return [ParentNode("blockquote", children)]
         case BlockType.UNORDERED_LIST:
             children = get_unordered_list_children(block)
