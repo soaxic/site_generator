@@ -21,3 +21,12 @@ def get_file_contents(path):
 def write_file(content, dest):
     with open(dest, "w") as file:
         file.write(content)
+
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+    dirs = list(map(lambda x: os.path.join(dir_path_content, x), os.listdir(dir_path_content)))
+    for dir in dirs:
+        dest = dir.replace(dir_path_content, dest_dir_path)
+        if os.path.isdir(dir):
+            generate_pages_recursive(dir, template_path, dest)
+        else:
+            generate_page(dir, template_path, dest.replace(".md", ".html"))
